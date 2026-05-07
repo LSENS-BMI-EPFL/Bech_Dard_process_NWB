@@ -1,13 +1,20 @@
-# **Welcome to the repo to process NWBs files from Bech Dard, eLife 2026**
+# **Bech & Dard NWB process repository**
 
-This README provides instruction to reproduce analysis and generate intermediate data used to plot.
+## NWB files processing
+This repository allows the processing NWBs files to reproduce analysis from Bech & Dard, eLife 2026.  
+This README provides instruction to **set up the python environment and run the analysis code to generate intermediate data used to plot**.  
+
+## Figure making
+To see how to reproduce the figure panels from the generated intermediate dataset see:  
+- [`figure code`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures)
+- [`intermediate dataset`](link to intermediate dataset for download)
 
 # **Installation**
 
 Create environment 
 
 ```
-conda create -n bech_dard_nwb_process python=3.11 python=3.11
+conda create -n bech_dard_nwb_process python=3.11
 
 conda activate bech_dard_nwb_process 
 
@@ -17,13 +24,22 @@ pip install git+https://gitlab.com/cossartlab/cicada_analysis.git
 
 # **How to use**
 
-1. Reproduce Figure 1 intermediate data : 
+## **Reproduce Figure 1 intermediate data :** 
+
+### Run
 ```
-
+conda activate bech_dard_nwb_process 
+python path/to/repo/main_analysis/figure1_analysis
 ```
+### Output
+In the created result folder
 
-2. Create NWB files using 'NWB_conversion.py'
+## **Reproduce Figure 3 intermediate data :** 
 
-
-# Development
-- Some implemented functions are experimenter-dependent (initials). They should be implemented for experimenter-dependent purposes.
+### Run
+```
+conda activate bech_dard_nwb_process 
+python path/to/repo/main_analysis/figure3_analysis
+```
+### Output
+In the created result folder
