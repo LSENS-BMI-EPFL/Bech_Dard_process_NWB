@@ -1,0 +1,35 @@
+# CICADA analysis parameters
+# Analysis : Average mice behavior
+
+analysis_class: CicadaAverageMiceBehavior
+analysis_module: cicada_analysis.Petersen_lab_plugins.Behavior.cicada_average_mice_behavior
+results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
+plots_to_do: [average_across_context_days]  # Plot(s) to do
+link_mice: false  # Link mice in the plot
+auditory_hit_color: [0.13333333333333333, 0.13333333333333333, 1.0, 1.0]  # Color of auditory hit trials
+auditory_miss_color: [0.39215686274509803, 0.5843137254901961, 0.9294117647058824, 1.0]  # Color of auditory miss trials
+whisker_hit_color: [1.0, 0.44313725490196076, 0.0, 1.0]  # Color of whisker hit trials
+whisker_miss_color: [0.9607843137254902, 0.9019607843137255, 0.7176470588235294, 1.0]  # Color of whisker miss trials
+nostim_miss_color: [0.8, 0.8, 0.8, 1.0]  # Color of correct rejection trials
+nostim_hit_color: [0.0, 0.0, 0.0, 1.0]  # Color of false alarm trials
+rewarded_context_color: [0.9725490196078431, 0.7843137254901961, 0.8627450980392157, 0.25098039215686274]  # Background color for rewarded context
+non_rewarded_context_color: [0.6274509803921569, 0.3215686274509804, 0.17647058823529413, 0.25098039215686274]  # Background color for rewarded context
+bckgrnd_color: [1.0, 1.0, 1.0, 1.0]  # Background color for figure
+axes_color: [0.0, 0.0, 0.0, 1.0]  # Color axe label for figure
+context_hue: "rewarded or not"  # Group for context plot
+context_plot_type: point-plot  # Type of plot for context hit rates across days
+whisker_switch: defined  # Counting whisker trials around transitions
+n_whisker_trials: 4  # Number of whisker trials to plot around context switch
+alignment_mode: first_session  # How to align selected sessions across mice
+cut_session: no_cut  # Cut(s) to do
+yaml_path: {YAML: null}  # Select path to yaml file
+first_trial: 0  # Manual: First trail to take
+last_trial: 500  # Manual: Last trial to take
+save_formats: [png, svg]  # Formats in which to save the figures
+dpi: 200  # Dpi (Dots per inches)
+width_fig: 6  # Width figure
+height_fig: 8  # Height figure
+xkcd_mode: false  # Turn on xkcd sketch-style drawing mode
+fig_scale_factor: 1  # Figure size scaling factor
+sns_context: paper  # Seaborn context
+verbose: true  # Verbose

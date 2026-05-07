@@ -19,7 +19,7 @@ figure3e_results_path = Path(os.path.join(results_path, 'figure3E'))
 os.makedirs(figure3e_results_path, exist_ok=True)
 
 # 3E image series
-print(f"\nRunning on: {figure3e_sessions}")
+print(f"\nRunning fig. 3E image series on:\n{figure3e_sessions}")
 analysis = run_from_config(
     sessions=figure3e_sessions,
     params=figure3e_img_params,
@@ -28,7 +28,7 @@ analysis = run_from_config(
 print(f"Results saved to: {analysis._results_path}")
 
 # 3E psths
-print(f"\nRunning on: {figure3e_sessions}")
+print(f"\nRunning fig. 3E psths on:\n{figure3e_sessions}")
 analysis = run_from_config(
     sessions=figure3e_sessions,
     params=figure3e_psth_params,
@@ -41,10 +41,10 @@ figure3f_sessions = os.path.join(session_path, 'sessions_Context_sessions_expert
 figure3f_img_params = os.path.join(parameters_path, 'params_figure3f_img.yaml')
 figure3f_psth_params = os.path.join(parameters_path, 'params_figure3f_psth.yaml')
 figure3f_results_path = Path(os.path.join(results_path, 'figure3F'))
-os.makedirs(figure3e_results_path, exist_ok=True)
+os.makedirs(figure3f_results_path, exist_ok=True)
 
 # 3F image series
-print(f"\nRunning on: {figure3f_sessions}")
+print(f"\nRunning fig. 3F image series on:\n{figure3f_sessions}")
 analysis = run_from_config(
     sessions=figure3f_sessions,
     params=figure3f_img_params,
@@ -53,7 +53,7 @@ analysis = run_from_config(
 print(f"Results saved to: {analysis._results_path}")
 
 # 3F psths
-print(f"\nRunning on: {figure3f_sessions}")
+print(f"\nRunning fig. 3F psths on:\n{figure3f_sessions}")
 analysis = run_from_config(
     sessions=figure3f_sessions,
     params=figure3f_psth_params,

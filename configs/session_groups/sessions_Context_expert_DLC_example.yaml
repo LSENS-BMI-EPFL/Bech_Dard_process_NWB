@@ -1,0 +1,5 @@
+# CICADA session list
+# Add or remove entries as needed.
+sessions:
+- identifier: PB185_20240823_102701
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/PB185_20240823_102701.nwb
