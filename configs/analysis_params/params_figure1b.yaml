@@ -1,0 +1,33 @@
+# CICADA analysis parameters
+# Analysis : Single mouse behavior plots
+
+analysis_class: CicadaSingleMouseBhvPlots
+analysis_module: cicada_analysis.Petersen_lab_plugins.Behavior.cicada_single_mouse_bhv_plots
+results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
+plots_to_do: [single_session]  # Plot(s) to do
+auditory_hit_color: [0.13000686655985352, 0.37000076295109485, 0.6599984740978103, 1.0]  # Color of auditory hit trials
+auditory_miss_color: [0.0, 1.0, 1.0, 1.0]  # Color of auditory miss trials
+whisker_hit_color: [0.14000152590218967, 0.5199969481956207, 0.25999847409781035, 1.0]  # Color of whisker hit trials
+whisker_miss_color: [0.8399938963912413, 0.10000762951094835, 0.1100022888532845, 1.0]  # Color of whisker miss trials
+nostim_miss_color: [0.8, 0.8, 0.8, 1.0]  # Color of correct rejection trials
+nostim_hit_color: [0.0, 0.0, 0.0, 1.0]  # Color of false alarm trials
+rewarded_context_color: [0.0, 0.5000076295109483, 0.0, 0.2500038147554742]  # Background color for rewarded context
+non_rewarded_context_color: [0.7000076295109483, 0.13000686655985352, 0.13000686655985352, 0.2500038147554742]  # Background color for rewarded context
+bckgrnd_color: [1.0, 1.0, 1.0, 1.0]  # Background color for figure
+axes_color: [0.0, 0.0, 0.0, 1.0]  # Color axe label for figure
+context_hue: "rewarded or not"  # Group for context plot
+context_plot_type: point-plot  # Type of plot for context hit rates across days
+show_single_bloc: false  # Show each bloc in plot if point-plot is selected
+whisker_switch: defined  # Counting whisker trials around transitions
+n_whisker_trials: 4  # Number of whisker trials to plot around context switch
+cut_session: no_cut  # Cut(s) to do
+yaml_path: {YAML: null}  # Select path to yaml file
+first_trial: 0  # Manual: First trail to take
+last_trial: 500  # Manual: Last trial to take
+save_formats: [pdf]  # Formats in which to save the figures
+dpi: 200  # Dpi (Dots per inches)
+width_fig: 15  # Width figure
+height_fig: 8  # Height figure
+xkcd_mode: false  # Turn on xkcd sketch-style drawing mode
+sns_context: poster  # Seaborn context
+verbose: true  # Verbose

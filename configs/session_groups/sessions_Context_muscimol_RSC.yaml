@@ -1,0 +1,45 @@
+# CICADA session list
+# Add or remove entries as needed.
+sessions:
+- identifier: RD061_20241128_084452
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD061_20241128_084452.nwb
+- identifier: RD061_20241129_094510
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD061_20241129_094510.nwb
+- identifier: RD061_20241130_092001
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD061_20241130_092001.nwb
+- identifier: RD066_20241124_111604
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD066_20241124_111604.nwb
+- identifier: RD066_20241125_120119
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD066_20241125_120119.nwb
+- identifier: RD066_20241126_121959
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD066_20241126_121959.nwb
+- identifier: RD068_20241120_124013
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD068_20241120_124013.nwb
+- identifier: RD068_20241121_162440
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD068_20241121_162440.nwb
+- identifier: RD068_20241122_121932
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD068_20241122_121932.nwb
+- identifier: RD070_20241124_133223
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD070_20241124_133223.nwb
+- identifier: RD070_20241125_151347
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD070_20241125_151347.nwb
+- identifier: RD070_20241126_153513
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD070_20241126_153513.nwb
+- identifier: RD071_20241127_145112
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD071_20241127_145112.nwb
+- identifier: RD071_20241128_172919
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD071_20241128_172919.nwb
+- identifier: RD071_20241129_161023
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD071_20241129_161023.nwb
+- identifier: RD077_20250203_113544
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD077_20250203_113544.nwb
+- identifier: RD077_20250204_122005
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD077_20250204_122005.nwb
+- identifier: RD078_20250203_131534
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD078_20250203_131534.nwb
+- identifier: RD078_20250204_140336
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD078_20250204_140336.nwb
+- identifier: RD072_20250205_092552
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD072_20250205_092552.nwb
+- identifier: RD072_20250206_103546
+  path: //sv-nas1.rcp.epfl.ch/Petersen-Lab/publications/2026/2026_Bech_Dard_eLife/2026_Bech_Dard_eLife_data/processed_data/RD072_20250206_103546.nwb

@@ -1,0 +1,36 @@
+# CICADA analysis parameters
+# Analysis : Widefield Time Courses
+
+analysis_class: CicadaWidefieldTimeCourses
+analysis_module: cicada_analysis.Petersen_lab_plugins.Widefield.cicada_widefield_time_courses
+results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
+widefield_acquisition: {PB177_20240525_124055: [ophys, dff0], PB177_20240527_135745: [ophys, dff0], PB177_20240528_093711: [
+    ophys, dff0], PB177_20240529_121819: [ophys, dff0], PB177_20240530_113408: [ophys,
+    dff0], PB177_20240531_104515: [ophys, dff0], PB177_20240606_104234: [ophys, dff0],
+  PB177_20240607_161204: [ophys, dff0], PB178_20240529_101445: [ophys, dff0], PB178_20240607_115237: [
+    ophys, dff0], PB178_20240608_132641: [ophys, dff0], PB185_20240823_102701: [ophys,
+    dff0], PB185_20240830_105945: [ophys, dff0], PB185_20240831_123411: [ophys, dff0],
+  PB187_20240806_132010: [ophys, dff0], PB187_20240807_091702: [ophys, dff0], PB187_20240808_105328: [
+    ophys, dff0], PB187_20240809_111335: [ophys, dff0], PB188_20240821_170100: [ophys,
+    dff0], PB188_20240822_153551: [ophys, dff0], PB188_20240823_113645: [ophys, dff0],
+  PB188_20240824_130819: [ophys, dff0], PB189_20240820_155808: [ophys, dff0], PB189_20240821_142007: [
+    ophys, dff0], PB189_20240822_172840: [ophys, dff0]}  #  
+plots_to_do: [wf_timecourse_avg_all_mice]  # Plot(s) to do
+epochs_to_do: [non-rewarded, rewarded]  # Select epoch(s) to do widefield analysis
+center_on_epochs: false  # use epoch transition as center
+trials_list: [auditory_hit_trial, auditory_miss_trial]  # Events
+widefield_start: 100  # Range of widefield (ms) before event
+widefield_stop: 120  # Range of widefield (ms) after event
+n_frames_averaged: 2  # number of frames to be averaged in 1 image
+baseline: 50  # Range of baseline (ms)
+remove_baseline: true  # Do baseline subtraction
+color_map: hotcold  # Select the color map
+colorbar_scale_min: -0.005  # Minimal value for colorbar
+colorbar_scale_max: 0.02  # Maximal value for colorbar
+context_diff_c_scale: 0.01  # Color scale for context difference
+save_formats: [png]  # Formats in which to save the figures
+dpi: 200  # Dpi (Dots per inches)
+width_fig: 15  # Width figure
+height_fig: 8  # Height figure
+xkcd_mode: false  # Turn on xkcd sketch-style drawing mode
+verbose: true  # Verbose
