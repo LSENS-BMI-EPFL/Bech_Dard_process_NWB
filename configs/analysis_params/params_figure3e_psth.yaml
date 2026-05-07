@@ -1,7 +1,7 @@
 # CICADA analysis parameters
 # Analysis : Widefield PSTH
 
-analysis_class: CicadaWidefieldPSTH
+analysis_class: CicadaWidefieldPsth
 analysis_module: cicada_analysis.Petersen_lab_plugins.Widefield.cicada_widefield_psth
 results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
 roi_response_series: {PB177_20240525_124055: [ophys, brain_grid_fluorescence, dff0_grid_traces], PB177_20240527_135745: [
