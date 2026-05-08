@@ -11,11 +11,15 @@ Create environment
 
 ```
 conda create -n bech_dard_nwb_process python=3.11
-
 conda activate bech_dard_nwb_process 
-
-pip install git+https://gitlab.com/cossartlab/cicada_analysis.git
-
+```
+Install git if necessary
+```
+conda install git
+```
+Install remaining dependencies
+```
+pip install git+https://gitlab.com/cossartlab/cicada_analysis.git pyarrow
 ```
 
 # **How to use**
