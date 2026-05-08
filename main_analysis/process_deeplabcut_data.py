@@ -5,9 +5,13 @@ import itertools
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import warnings
+warnings.filterwarnings("ignore")
 
 from cicada_nwb.nwb_session import NWBSession
-from cicada_analysis.cicada_tools.core.period_utils import filter_events_based_on_epochs, find_nearest
+from cicada_analysis.cicada_tools.core.period_utils import filter_events_based_on_epochs
+from cicada_analysis.cicada_tools.core.array_utils import find_nearest
+
 
 
 def filter_part_by_camview(view):
@@ -112,7 +116,7 @@ def compute_combined_data(nwb_files, parts, center=True):
     for nwb_index, nwb_path in enumerate(nwb_files):
 
         with NWBSession(nwb_path) as session:
-            mouse_id = session.mouse_id
+            mouse_id = session.subject_id
             session_id = session.session_id
 
             print(" ")
@@ -243,16 +247,17 @@ def compute_dlc_data(nwb_files, output_path):
 def main(groups, output_path):
     for group in groups:
         group_id = os.path.basename(group).split('_')[-1].split('.')[0]
-        os.makedirs(os.path.join(output_path, group_id), exist_ok=True)
+        saving_path = os.path.join(output_path, f'dlc_{group_id}')
+        os.makedirs(saving_path, exist_ok=True)
 
         with open(group, 'r', encoding='utf8') as stream:
             config_dict = yaml.safe_load(stream)
         nwb_files = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
 
-        print(f"Preprocessing DeepLabCut data for {group_id} group ({len(nwb_files)} sessions)")
-        compute_dlc_data(nwb_files, output_path)
+        print(f"\nPreprocessing DeepLabCut data for {group_id} group ({len(nwb_files)} sessions)")
+        compute_dlc_data(nwb_files, saving_path)
 
-        print(f'{group_id} group CSV tables written in {output_path}')
+        print(f'\n{group_id} group CSV tables written in {saving_path}')
 
 
 if __name__ == '__main__':

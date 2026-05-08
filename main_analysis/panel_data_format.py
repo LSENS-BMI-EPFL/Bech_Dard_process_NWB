@@ -64,6 +64,24 @@ if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
 
+## 1IJ
+# ---------------------------------------------------------------------------------------
+# Utils
+# ---------------------------------------------------------------------------------------
+def ignore_uncentered(dir, contents):
+    return [item for item in contents
+            if os.path.isfile(os.path.join(dir, item)) and item.startswith('uncentered')]
+
+def ignore_non_uncentered(dir, contents):
+    return [item for item in contents
+            if os.path.isfile(os.path.join(dir, item)) and not item.startswith('uncentered')]
+# ---------------------------------------------------------------------------------------
+matches = glob.glob(os.path.join(results_dir, 'processed_deeplabcut_data'))
+dest1 = os.path.join(published_data_folder, 'figure1', '1IJ')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1, ignore=ignore_non_uncentered)
+
 # #################################################################
 # Figure 1 - Supplementary
 # #################################################################
@@ -88,10 +106,32 @@ if matches and not os.path.exists(dest1):
 # #################################################################
 # Figure 2 - Supplementary
 # #################################################################
+## Supp 2ABC
+matches = glob.glob(os.path.join(results_dir, 'figure2_supp', '2ABC'))
+dest1 = os.path.join(published_data_folder, 'figure2_supp', '2ABC')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
 
 # #################################################################
 # Figure 3
 # #################################################################
+## 3BC
+matches = glob.glob(os.path.join(results_dir, 'processed_deeplabcut_data'))
+dest1 = os.path.join(published_data_folder, 'figure3', '3BC')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1, ignore=ignore_uncentered)
+
+## 3D
+os.makedirs(os.path.join(published_data_folder, 'figure3', '3D'),
+            exist_ok=True)
+matches = glob.glob(os.path.join(results_dir, 'figure3', 'figure3D', 'GECO_coordinates_table.csv'))
+dest1 = os.path.join(published_data_folder, 'figure3', '3D', 'GECO_coordinates_table.csv')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copy2(src, dest1)
+
 
 ## 3E time image courses
 os.makedirs(os.path.join(published_data_folder, 'figure3', '3E_images'),
