@@ -85,23 +85,58 @@ if matches and not os.path.exists(dest1):
 # #################################################################
 # Figure 1 - Supplementary
 # #################################################################
-## Supp1D
-os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1D'),
+## Supp 1A
+os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1ABC'),
+            exist_ok=True)
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1A', '*', 'context_expert_sessions.xlsx'))
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '1ABC', 'context_expert_sessions.xlsx')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copy2(src, dest1)
+
+## Supp 1B
+os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1ABC'),
+            exist_ok=True)
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1B', '*', 'context_block_duration.csv'))
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '1ABC', 'context_block_duration.csv')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copy2(src, dest1)
+
+## Supp 1C
+os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1ABC'),
+            exist_ok=True)
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1C', '*', 'context_block_duration_expert.csv'))
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '1ABC', 'context_block_duration_expert.csv')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copy2(src, dest1)
+
+## Supp 1E
+os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1E'),
             exist_ok=True)
 matches = glob.glob(os.path.join(results_dir, 'figure1', 'figure1CDFGH', '*', 'mouse_averaged_reaction_time.csv'))
-dest1 = os.path.join(published_data_folder, 'figure1_supp', '1D', 'mouse_averaged_reaction_time.csv')
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '1E', 'mouse_averaged_reaction_time.csv')
 if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
 
 ## Supp1F
-os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1E'),
+os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1F'),
             exist_ok=True)
-matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1E', '*', 'context_transitions_averaged_table.csv'))
-dest1 = os.path.join(published_data_folder, 'figure1_supp', '1E', 'context_transitions_averaged_table.csv')
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1F', '*', 'context_transitions_averaged_table.csv'))
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '1F', 'context_transitions_averaged_table.csv')
 if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
+
+## Supp 2A
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '2A'))
+dest1 = os.path.join(published_data_folder, 'figure1_supp', '2A')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
+
 
 # #################################################################
 # Figure 2 - Supplementary

@@ -1,10 +1,11 @@
 import os
 import re
 import yaml
-import warnings
-from pathlib import Path
-import pandas as pd
 import numpy as np
+import pandas as pd
+from tqdm import tqdm
+from pathlib import Path
+import warnings
 warnings.filterwarnings("ignore")
 
 from cicada_analysis.config.runner import run_from_config
@@ -17,7 +18,7 @@ parameters_path = Path(os.path.join(main_dir, 'configs', 'analysis_params'))
 results_path = Path(os.path.join(main_dir, 'results', 'figure1_supp'))
 
 # Figure 1 supp 1A  # maybe very long : ~1400 sessions
-figure1_supp1a_sessions = os.path.join(results_path, 'sessions_Context_sessions.yaml')
+figure1_supp1a_sessions = os.path.join(session_path, 'sessions_Context_sessions.yaml')
 figure1_supp1a_params = os.path.join(results_path, 'params_figure1b.yaml')
 figure1_supp1a_results_path = Path(os.path.join(results_path, '1A'))
 os.makedirs(figure1_supp1a_results_path, exist_ok=True)
@@ -29,17 +30,74 @@ analysis = run_from_config(
             )
 print(f"Results saved to: {analysis._results_path}")
 
+# Figure 1 sup 1B # maybe very long : ~1400 sessions
+figure1_supp1b_sessions = os.path.join(session_path, 'sessions_Context_sessions.yaml')
+figure1_supp1b_results_path = Path(os.path.join(results_path, '1B'))
+os.makedirs(figure1_supp1b_results_path, exist_ok=True)
 
-# Figure 1 supp 1E
-figure1_supp1e_sessions = os.path.join(session_path, 'sessions_Context_sound_off_only.yaml')
-figure1_supp1e_params = os.path.join(parameters_path, 'params_figure1_supp1e.yaml')
-figure1_supp1e_results_path = Path(os.path.join(results_path, '1E'))
-os.makedirs(figure1_supp1e_results_path, exist_ok=True)
-print(f"\nRunning fig. 1 supp 1E on:\n{figure1_supp1e_sessions}")
+with open(figure1_supp1b_sessions, 'r', encoding='utf8') as stream:
+    config_dict = yaml.safe_load(stream)
+nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+print('\nFig. 1 supp 1B')
+print(f'Extract duration and number of context epochs per session for {len(nwb_paths)} sessions')
+
+save_table = []
+for nwb_path in tqdm(nwb_paths):
+    with NWBSession(nwb_path) as session_data:
+        mouse_id = session_data.subject_id
+        session_id = session_data.session_id
+        epoch_names = session_data.behavior.get_behavioral_epochs_names()
+        dfs = []
+        for epoch_name in epoch_names:
+            epoch_times = session_data.behavior.get_behavioral_epochs_times(epoch_name=epoch_name)
+            epoch_length = [epoch_times[1, i] - epoch_times[0, i] for i in range(epoch_times.shape[1])]
+            df = pd.DataFrame.from_dict({'mouse_id': mouse_id, 'session_id':session_id,
+                                         'epoch': epoch_name, 'epoch length': epoch_length})
+            dfs.append(df)
+    dfs = pd.concat(dfs, ignore_index=True)
+    save_table.append(dfs)
+save_table = pd.concat(save_table, ignore_index=True)
+save_table.to_csv(os.path.join(figure1_supp1b_results_path, 'context_block_duration.csv'))
+
+# Figure 1 supp 1C
+figure1_supp1c_sessions = os.path.join(session_path, 'sessions_Context_sessions_expert.yaml')
+figure1_supp1c_results_path = Path(os.path.join(results_path, '1C'))
+os.makedirs(figure1_supp1c_results_path, exist_ok=True)
+
+with open(figure1_supp1c_sessions, 'r', encoding='utf8') as stream:
+    config_dict = yaml.safe_load(stream)
+nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+print('\nFig. 1 supp 1C')
+print(f'Extract duration and number of context epochs per session for {len(nwb_paths)} sessions')
+
+save_table = []
+for nwb_path in tqdm(nwb_paths):
+    with NWBSession(nwb_path) as session_data:
+        mouse_id = session_data.subject_id
+        session_id = session_data.session_id
+        epoch_names = session_data.behavior.get_behavioral_epochs_names()
+        dfs = []
+        for epoch_name in epoch_names:
+            epoch_times = session_data.behavior.get_behavioral_epochs_times(epoch_name=epoch_name)
+            epoch_length = [epoch_times[1, i] - epoch_times[0, i] for i in range(epoch_times.shape[1])]
+            df = pd.DataFrame.from_dict({'mouse_id': mouse_id, 'session_id':session_id,
+                                         'epoch': epoch_name, 'epoch length': epoch_length})
+            dfs.append(df)
+    dfs = pd.concat(dfs, ignore_index=True)
+    save_table.append(dfs)
+save_table = pd.concat(save_table, ignore_index=True)
+save_table.to_csv(os.path.join(figure1_supp1c_results_path, 'context_block_duration_expert.csv'))
+
+# Figure 1 supp 1F
+figure1_supp1f_sessions = os.path.join(session_path, 'sessions_Context_sound_off_only.yaml')
+figure1_supp1f_params = os.path.join(parameters_path, 'params_figure1_supp1f.yaml')
+figure1_supp1f_results_path = Path(os.path.join(results_path, '1F'))
+os.makedirs(figure1_supp1f_results_path, exist_ok=True)
+print(f"\nRunning fig. 1 supp 1F on:\n{figure1_supp1f_sessions}")
 analysis = run_from_config(
-    sessions=figure1_supp1e_sessions,
-    params=figure1_supp1e_params,
-    results_path=figure1_supp1e_results_path,
+    sessions=figure1_supp1f_sessions,
+    params=figure1_supp1f_params,
+    results_path=figure1_supp1f_results_path,
             )
 print(f"Results saved to: {analysis._results_path}")
 

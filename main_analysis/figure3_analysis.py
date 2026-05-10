@@ -2,6 +2,7 @@ import os
 import yaml
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from pathlib import Path
 from scipy.ndimage import center_of_mass
 import warnings
@@ -27,7 +28,7 @@ with open(figure3d_sessions, 'r', encoding='utf8') as stream:
 nwb_files = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
 
 print('\nGenerate data for Fig. 3D')
-print(f"\nProcessing data for {group_id} group ({len(nwb_files)} sessions)")
+print(f"Processing data for {group_id} group ({len(nwb_files)} sessions)")
 
 # Keys & Params
 rrs_keys = ['ophys', 'brain_area_fluorescence', 'dff0_traces']
@@ -40,7 +41,7 @@ bregma = (88, 120)
 
 # Extract data
 coordinates_df = []
-for nwb_index, nwb_path in enumerate(nwb_files):
+for nwb_path in tqdm(nwb_files):
     with NWBSession(nwb_path) as session:
         session_id = session.session_id
         mouse_id = session.subject_id
