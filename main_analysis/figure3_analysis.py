@@ -78,7 +78,16 @@ coordinates_df = pd.concat(coordinates_df)
 coordinates_df.to_csv(os.path.join(saving_path, 'GECO_coordinates_table.csv'))
 print(f'\nResults saved to {saving_path}')
 
-# Figure 3E
+# Empty grid template
+x_vals = np.arange(5.5, -0.5, -1.0)
+y_vals = np.arange(2.5, -4.5, -1.0)
+rows = [(x, y) for x in x_vals for y in y_vals]
+df = pd.DataFrame(rows, columns=["x", "y"])
+df["dff0"] = 0
+df["frame"] = 0
+df.to_csv(os.path.join(saving_path, "empty_grid.csv"))
+
+# Figure 3E (Auditory trials responses)
 figure3e_sessions = os.path.join(session_path, 'sessions_Context_sessions_expert_WF_jrGECO.yaml')
 figure3e_img_params = os.path.join(parameters_path, 'params_figure3e_img.yaml')
 figure3e_psth_params = os.path.join(parameters_path, 'params_figure3e_psth.yaml')
@@ -103,7 +112,7 @@ analysis = run_from_config(
             )
 print(f"Results saved to: {analysis._results_path}")
 
-# Figure 3F
+# Figure 3F (Whisker trial responses)
 figure3f_sessions = os.path.join(session_path, 'sessions_Context_sessions_expert_WF_jrGECO.yaml')
 figure3f_img_params = os.path.join(parameters_path, 'params_figure3f_img.yaml')
 figure3f_psth_params = os.path.join(parameters_path, 'params_figure3f_psth.yaml')

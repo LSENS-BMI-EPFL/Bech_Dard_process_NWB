@@ -139,8 +139,32 @@ if matches and not os.path.exists(dest1):
 
 
 # #################################################################
+# Figure 2
+# #################################################################
+## 2CDE
+matches = glob.glob(os.path.join(results_dir, 'figure2', '2CDE'))
+dest1 = os.path.join(published_data_folder, 'figure2', '2CDE')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
+
+## 2CDE
+matches = glob.glob(os.path.join(results_dir, 'figure2', '2F'))
+dest1 = os.path.join(published_data_folder, 'figure2', '2F')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
+
+# #################################################################
 # Figure 2 - Supplementary
 # #################################################################
+## Supp 1DE
+matches = glob.glob(os.path.join(results_dir, 'figure2_supp', '1DE'))
+dest1 = os.path.join(published_data_folder, 'figure2_supp', '1DE')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
+
 ## Supp 2ABC
 matches = glob.glob(os.path.join(results_dir, 'figure2_supp', '2ABC'))
 dest1 = os.path.join(published_data_folder, 'figure2_supp', '2ABC')
@@ -167,6 +191,11 @@ if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
 
+matches = glob.glob(os.path.join(results_dir, 'figure3', 'figure3D', 'empty_grid.csv'))
+dest1 = os.path.join(published_data_folder, 'figure3', '3D', 'empty_grid.csv')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copy2(src, dest1)
 
 ## 3E time image courses
 os.makedirs(os.path.join(published_data_folder, 'figure3', '3E_images'),
@@ -186,7 +215,6 @@ if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
 
-
 ## 3F time image courses
 os.makedirs(os.path.join(published_data_folder, 'figure3', '3F_images'),
             exist_ok=True)
@@ -204,3 +232,30 @@ dest1 = os.path.join(published_data_folder, 'figure3', '3F_psths', 'PSTHs_datase
 if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copy2(src, dest1)
+
+
+# #################################################################
+# Figure 3 - Supplementary
+# #################################################################
+## Supp 1A&B
+for grp in ['1A_tdtomato', '1B_gfp', '1B_gcamp']:
+    os.makedirs(os.path.join(published_data_folder, 'figure3_supp', grp), exist_ok=True)
+    matches = glob.glob(os.path.join(results_dir, 'figure3_supp', grp, '*', 'general_data_dict.npy'))
+    dest1 = os.path.join(published_data_folder, 'figure3_supp', grp, 'general_data_dict.npy')
+    if matches and not os.path.exists(dest1):
+        src = matches[0]
+        shutil.copytree(src, dest1)
+
+## Sup 4AB
+matches = glob.glob(os.path.join(results_dir, 'processed_deeplabcut_data'))
+dest1 = os.path.join(published_data_folder, 'figure3_supp', '4AB')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1, ignore=ignore_uncentered)
+
+## Sup 5BC
+matches = glob.glob(os.path.join(results_dir, 'figure3_supp', '5BC'))
+dest1 = os.path.join(published_data_folder, 'figure3_supp', '5BC')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
