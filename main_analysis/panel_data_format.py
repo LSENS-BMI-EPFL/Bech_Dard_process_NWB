@@ -172,6 +172,14 @@ if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copytree(src, dest1)
 
+## Supp 3ABC
+matches = glob.glob(os.path.join(results_dir, 'figure2_supp', '3ABC'))
+dest1 = os.path.join(published_data_folder, 'figure2_supp', '3ABC')
+if matches and not os.path.exists(dest1):
+    src = matches[0]
+    shutil.copytree(src, dest1)
+
+
 # #################################################################
 # Figure 3
 # #################################################################
@@ -244,7 +252,7 @@ for grp in ['1A_tdtomato', '1B_gfp', '1B_gcamp']:
     dest1 = os.path.join(published_data_folder, 'figure3_supp', grp, 'general_data_dict.npy')
     if matches and not os.path.exists(dest1):
         src = matches[0]
-        shutil.copytree(src, dest1)
+        shutil.copy2(src, dest1)
 
 ## Sup 4AB
 matches = glob.glob(os.path.join(results_dir, 'processed_deeplabcut_data'))

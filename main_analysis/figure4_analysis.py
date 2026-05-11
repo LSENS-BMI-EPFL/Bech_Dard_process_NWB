@@ -258,7 +258,7 @@ print('\nFigure 2 supp 3ABC')
 
 # Load the data
 print('Load table')
-total_df = load_wf_opto_data(mice_list, save_path)
+total_df = load_wf_opto_data(nwb_files, save_path)
 total_df['time'] = [np.arange(-1, 1.5, 1/100) for i in range(total_df.shape[0])]
 total_df['legend'] = total_df.apply(lambda x: f"{x.opto_stim_coord} - {'lick' if x.lick_flag==1 else 'no lick'}", axis=1)
 
@@ -297,5 +297,6 @@ bodyparts_to_plot = ['jaw_angle', 'jaw_y', 'jaw_velocity',
 # Save intermediary dataset to reproduce panels
 kept_cols = bodyparts_to_plot + ['mouse_id', 'context', 'trial_type', 'opto_stim_coord']
 mouse_avg_df_saved = mouse_avg_df[kept_cols]
+os.makedirs(os.path.join(main_dir, 'results' 'figure2_supp', '3ABC'), exist_ok=True)
 mouse_avg_df_saved.to_csv(os.path.join(main_dir, 'figure2_supp', '3ABC', 'all_trials_bodyparts_psths.csv'))
 
