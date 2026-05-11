@@ -124,10 +124,9 @@ def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_ro
     trial_table.to_parquet(path=Path(output_path, "correlation_table.parquet.gzip"), compression='gzip')
 
     return trial_table
-
-
 # ---------------------------------------------------------------------------------------------------------------
-# This code was run with parallelization on a cluster
+
+ # This code was run with parallelization on a cluster
 def main(groups, output_path):
     for group in groups:
         group_id = os.path.basename(group).split('_')[-1].split('.')[0]
@@ -145,7 +144,7 @@ def main(groups, output_path):
             with NWBSession(nwb_file) as session_data:
                 session_id = session_data.session_id
                 mouse_id = session_data.subject_id
-                print(f"Mouse : {mouse_id}, session : {session_id}")
+                print(f"\nMouse : {mouse_id}, session : {session_id}")
 
                 # Adjust saving path :
                 saving_path = os.path.join(saving_path, mouse_id, session_id)
@@ -179,9 +178,11 @@ def main(groups, output_path):
                     data_roi = get_reduced_im_by_epoch(session_data, trial_table.start_time, wf_timestamps, start=-200, stop=0)
                     dict_roi = [roi for roi in data_roi.keys() if roi != 'time']
                     data_frames = get_frames_by_epoch(session_data, trial_table.start_time, wf_timestamps, start=-200, stop=0)
+
                 print('Start trial based correlation')
                 results = trial_based_correlation(mouse_id, session_id, trial_table, dict_roi,
                                                   data_roi, data_frames, saving_path)
+                print(f'Results saved to {saving_path}')
 
         return
 
