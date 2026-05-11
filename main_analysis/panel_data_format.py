@@ -97,7 +97,7 @@ if matches and not os.path.exists(dest1):
 ## Supp 1B
 os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1ABC'),
             exist_ok=True)
-matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1B', '*', 'context_block_duration.csv'))
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1B','context_block_duration.csv'))
 dest1 = os.path.join(published_data_folder, 'figure1_supp', '1ABC', 'context_block_duration.csv')
 if matches and not os.path.exists(dest1):
     src = matches[0]
@@ -106,7 +106,7 @@ if matches and not os.path.exists(dest1):
 ## Supp 1C
 os.makedirs(os.path.join(published_data_folder, 'figure1_supp', '1ABC'),
             exist_ok=True)
-matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1C', '*', 'context_block_duration_expert.csv'))
+matches = glob.glob(os.path.join(results_dir, 'figure1_supp', '1C', 'context_block_duration_expert.csv'))
 dest1 = os.path.join(published_data_folder, 'figure1_supp', '1ABC', 'context_block_duration_expert.csv')
 if matches and not os.path.exists(dest1):
     src = matches[0]

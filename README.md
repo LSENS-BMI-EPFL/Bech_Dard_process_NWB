@@ -19,7 +19,7 @@ conda install git
 ```
 Install remaining dependencies
 ```
-pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git" "pyarrow>=16"
+pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0" "pyarrow>=16"
 ```
 
 # **How to use**

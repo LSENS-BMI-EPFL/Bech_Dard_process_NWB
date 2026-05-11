@@ -19,7 +19,7 @@ results_path = Path(os.path.join(main_dir, 'results', 'figure1_supp'))
 
 # Figure 1 supp 1A  # maybe very long : ~1400 sessions
 figure1_supp1a_sessions = os.path.join(session_path, 'sessions_Context_sessions.yaml')
-figure1_supp1a_params = os.path.join(results_path, 'params_figure1b.yaml')
+figure1_supp1a_params = os.path.join(parameters_path, 'params_figure1b.yaml')
 figure1_supp1a_results_path = Path(os.path.join(results_path, '1A'))
 os.makedirs(figure1_supp1a_results_path, exist_ok=True)
 print(f"\nRunning fig. 1 supp 1A on:\n{figure1_supp1a_sessions}")
@@ -54,6 +54,8 @@ for nwb_path in tqdm(nwb_paths):
             df = pd.DataFrame.from_dict({'mouse_id': mouse_id, 'session_id':session_id,
                                          'epoch': epoch_name, 'epoch length': epoch_length})
             dfs.append(df)
+    if not dfs:
+        continue
     dfs = pd.concat(dfs, ignore_index=True)
     save_table.append(dfs)
 save_table = pd.concat(save_table, ignore_index=True)
