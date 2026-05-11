@@ -1,0 +1,40 @@
+# CICADA analysis parameters
+# Analysis : Widefield Time Courses
+
+analysis_class: CicadaWidefieldTimeCourses
+analysis_module: cicada_analysis.Petersen_lab_plugins.Widefield.cicada_widefield_time_courses
+results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
+widefield_acquisition: {RD039_20240222_145509: [ophys, dff0], RD039_20240228_182245: [ophys, dff0],
+  RD043_20240229_145751: [ophys, dff0], RD043_20240301_104556: [ophys, dff0], RD043_20240306_175640: [
+    ophys, dff0], RD045_20240227_183215: [ophys, dff0], RD045_20240228_171641: [ophys,
+    dff0], RD045_20240229_172110: [ophys, dff0], RD045_20240301_141157: [ophys, dff0],
+  RD049_20240601_125108: [ophys, dff0], RD049_20240605_115240: [ophys, dff0], RD049_20240610_112214: [
+    ophys, dff0], RD049_20240611_134805: [ophys, dff0], RD049_20240613_124245: [ophys,
+    dff0], RD054_20240813_100047: [ophys, dff0], RD054_20240816_085656: [ophys, dff0],
+  RD054_20240822_092158: [ophys, dff0], RD054_20240823_080514: [ophys, dff0], RD055_20240809_105347: [
+    ophys, dff0], RD055_20240814_104525: [ophys, dff0], RD055_20240816_100734: [ophys,
+    dff0], RD055_20240819_105516: [ophys, dff0], RD055_20240821_094632: [ophys, dff0],
+  RD055_20240823_093660: [ophys, dff0], RD056_20240809_122313: [ophys, dff0], RD056_20240814_115950: [
+    ophys, dff0], RD056_20240819_121536: [ophys, dff0], RD056_20240822_124719: [ophys,
+    dff0], RD056_20240827_084507: [ophys, dff0], RD056_20240829_083808: [ophys, dff0],
+  RD056_20240830_081606: [ophys, dff0], RD057_20240823_114642: [ophys, dff0], RD057_20240824_091953: [
+    ophys, dff0]}  #
+plots_to_do: [wf_timecourse_avg_all_mice]  # Plot(s) to do
+epochs_to_do: [non-rewarded, rewarded]  # Select epoch(s) to do widefield analysis
+center_on_epochs: true  # use epoch transition as center
+trials_list: [whisker_hit_trial, whisker_miss_trial]  # Events
+widefield_start: 100  # Range of widefield (ms) before event
+widefield_stop: 120  # Range of widefield (ms) after event
+n_frames_averaged: 2  # number of frames to be averaged in 1 image
+baseline: 50  # Range of baseline (ms)
+remove_baseline: true  # Do baseline subtraction
+color_map: hotcold  # Select the color map
+colorbar_scale_min: -0.005  # Minimal value for colorbar
+colorbar_scale_max: 0.02  # Maximal value for colorbar
+context_diff_c_scale: 0.01  # Color scale for context difference
+save_formats: [png, svg]  # Formats in which to save the figures
+dpi: 400  # Dpi (Dots per inches)
+width_fig: 15  # Width figure
+height_fig: 8  # Height figure
+xkcd_mode: false  # Turn on xkcd sketch-style drawing mode
+verbose: true  # Verbose

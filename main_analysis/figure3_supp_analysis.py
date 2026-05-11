@@ -19,7 +19,6 @@ param_path = Path(os.path.join(main_dir, 'configs', 'analysis_params'))
 group_ids = ['gcamp', 'GFP', 'tomato']
 group_files = [os.path.join(session_path, f'sessions_Context_sessions_expert_WF_{group_id}.yaml')
           for group_id in group_ids]
-param_file = os.path.join(param_path, 'params_figure3f_img.yaml')
 results_path = os.path.join(main_dir, 'results', 'figure3_supp')
 os.makedirs(results_path, exist_ok=True)
 
@@ -33,6 +32,8 @@ for group in group_files:
         os.makedirs(saving_path, exist_ok=True)
 
     print(f"\nExtracting image series data of Fig.3 supp 1A&B for {group_id} group")
+
+    param_file = os.path.join(param_path, f'params_figure3_supp1_{group_id.lower()}_img.yaml')
 
     analysis = run_from_config(
         sessions=group,

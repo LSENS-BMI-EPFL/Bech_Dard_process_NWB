@@ -1,0 +1,32 @@
+# CICADA analysis parameters
+# Analysis : Widefield Time Courses
+
+analysis_class: CicadaWidefieldTimeCourses
+analysis_module: cicada_analysis.Petersen_lab_plugins.Widefield.cicada_widefield_time_courses
+results_path: C:/Users/rdard/Documents/new_cicada_tests/analysis_results  # type:dir | MANDATORY
+widefield_acquisition: {PB195_20241118_105242: [ophys, dff0], PB195_20241119_095540: [ophys, dff0],
+  PB195_20241120_112711: [ophys, dff0], PB195_20241122_100713: [ophys, dff0], PB195_20241127_103029: [
+    ophys, dff0], PB196_20241122_122220: [ophys, dff0], PB196_20241210_162659: [ophys,
+    dff0], PB197_20241121_112305: [ophys, dff0], PB197_20241122_132228: [ophys, dff0],
+  PB197_20241126_151654: [ophys, dff0], PB197_20241127_134401: [ophys, dff0], PB198_20241119_111415: [
+    ophys, dff0], PB198_20241120_131355: [ophys, dff0], PB198_20241121_123544: [ophys,
+    dff0], PB198_20241122_150719: [ophys, dff0]}  #
+plots_to_do: [wf_timecourse_avg_all_mice]  # Plot(s) to do
+epochs_to_do: [non-rewarded, rewarded]  # Select epoch(s) to do widefield analysis
+center_on_epochs: true  # use epoch transition as center
+trials_list: [whisker_hit_trial, whisker_miss_trial]  # Events
+widefield_start: 100  # Range of widefield (ms) before event
+widefield_stop: 120  # Range of widefield (ms) after event
+n_frames_averaged: 2  # number of frames to be averaged in 1 image
+baseline: 50  # Range of baseline (ms)
+remove_baseline: true  # Do baseline subtraction
+color_map: hotcold  # Select the color map
+colorbar_scale_min: -0.005  # Minimal value for colorbar
+colorbar_scale_max: 0.02  # Maximal value for colorbar
+context_diff_c_scale: 0.01  # Color scale for context difference
+save_formats: [png, svg]  # Formats in which to save the figures
+dpi: 400  # Dpi (Dots per inches)
+width_fig: 15  # Width figure
+height_fig: 8  # Height figure
+xkcd_mode: false  # Turn on xkcd sketch-style drawing mode
+verbose: true  # Verbose
