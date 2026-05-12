@@ -7,47 +7,47 @@ See at the end how to reproduce the figure panels starting from the intermediate
 
 # **Installation**
 
-Create environment 
+### Create environment
 
-```
+```bash
 conda create -n bech_dard_nwb_process python=3.11
 conda activate bech_dard_nwb_process 
 ```
-Install git if necessary
-```
+### Install git if necessary
+```bash
 conda install git
 ```
-Install remaining dependencies
-```
+### Install remaining dependencies
+```bash
 pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0" "pyarrow>=16"
 ```
 
-# **How to use**
+# **How to use - Reproduce intermediate data**
 
-## **Reproduce Figure 1 intermediate data :** 
+## Run each file sequentially
 
-### Run
-```
+```bash
 conda activate bech_dard_nwb_process 
 python path/to/repo/main_analysis/figure1_analysis.py
-```
-### Output
-In the created results folder
-
-## **Reproduce Figure 3 intermediate data :** 
-
-### Run
-```
-conda activate bech_dard_nwb_process 
+python path/to/repo/main_analysis/figure1_supp_analysis.py
+python path/to/repo/main_analysis/figure2_analysis.py
 python path/to/repo/main_analysis/figure3_analysis.py
+python path/to/repo/main_analysis/figure3_supp_analysis.py
+python path/to/repo/main_analysis/figure4_analysis.py
+python path/to/repo/main_analysis/process_deeplabcutdata.py
+python path/to/repo/main_analysis/process_opto_widefield_examples.py
+python path/to/repo/main_analysis/pixel_correlation_analysis.py
 ```
-### Output
-In the created results folder
+**Warning** : _pixel_correlation_analysis_ script may run for multiple days (was previously optimized to run on HPC)
+
+## Output
+Each script is going to populate a results folder created within the main folder.
 
 # **Reproduction of figures panels**
 
 ## **Reorganize results to follow figure panel ordering**
-```
+
+```bash
 conda activate bech_dard_nwb_process 
 python path/to/repo/main_analysis/panel_data_format.py
 ```
