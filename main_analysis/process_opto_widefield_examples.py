@@ -51,13 +51,7 @@ def get_frames_by_epoch(nwb_session, trials, wf_timestamps, start=-200, stop=200
             data = np.pad(data, ((0, 1), (0, 0), (0, 0)), 'edge')
         elif data.shape[0] < nframes - 1:
             data = np.ones([nframes, 125, 160]) * np.nan
-
-        data_filt = (data.reshape(nframes, -1) - np.nanmean(data.reshape(nframes, -1), axis=0)) / np.nanstd(
-            data.reshape(nframes, -1), axis=0)
-
-        data_filt = data_filt.T
-        frames.append(data_filt)
-
+        frames.append(data)
     data_frames = np.array(frames)
 
     return data_frames
