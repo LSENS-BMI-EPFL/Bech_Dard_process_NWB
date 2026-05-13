@@ -1,5 +1,7 @@
 import os
+import gc
 import yaml
+import pickle
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -62,15 +64,17 @@ def get_frames_by_epoch(nwb_session, trials, wf_timestamps, start=-200, stop=200
 
 
 def plot_example_stim_images(nwb_file_path, result_path):
-    df = []
+    df = []  # accumulator list
     for nwb_file in nwb_file_path:
         with NWBSession(nwb_file) as session_data:
-            bhv_data =build_standard_behavior_table([nwb_file])
-            if bhv_data.trial_id.duplicated().sum()>0:
+            bhv_data = build_standard_behavior_table([nwb_file])
+            if bhv_data.trial_id.duplicated().sum() > 0:
                 bhv_data['trial_id'] = bhv_data.index.values
 
-            bhv_data = bhv_data.loc[(bhv_data.early_lick==0) & (bhv_data.opto_grid_ap!=3.5)]
-            bhv_data['opto_stim_coord'] = bhv_data.apply(lambda x: f"({x.opto_grid_ap}, {x.opto_grid_ml})",axis=1)
+            bhv_data = bhv_data.loc[(bhv_data.early_lick == 0) & (bhv_data.opto_grid_ap != 3.5)]
+            bhv_data['opto_stim_coord'] = bhv_data.apply(
+                lambda x: f"({x.opto_grid_ap}, {x.opto_grid_ml})", axis=1
+            )
             wf_timestamps = session_data.widefield.get_widefield_timestamps(['ophys', 'dff0'])
             session_id = session_data.session_id
             mouse_id = session_data.subject_id
@@ -80,20 +84,36 @@ def plot_example_stim_images(nwb_file_path, result_path):
                 if loc not in ["(-1.5, 3.5)", "(1.5, 1.5)", "(-1.5, 0.5)", "(-5.0, 5.0)"]:
                     continue
 
-                opto_data = bhv_data.loc[bhv_data.opto_stim_coord==loc]
+                opto_data = bhv_data.loc[bhv_data.opto_stim_coord == loc].copy()
                 opto_data['mouse_id'] = mouse_id
                 opto_data['session_id'] = session_id
                 trials = opto_data.start_time
                 wf_image = get_frames_by_epoch(session_data, trials, wf_timestamps, start=40, stop=60)
                 opto_data['wf_image'] = [wf_image[i] for i in range(wf_image.shape[0])]
-                df += [opto_data]
+                opto_data['wf_image_sub'] = opto_data['wf_image'].apply(
+                    lambda x: x - np.nanmean(x[:10], axis=0)
+                )
+                opto_data = opto_data.groupby(
+                    by=['mouse_id', 'session_id', 'context', 'trial_type', 'opto_stim_coord']
+                ).agg({'wf_image_sub': lambda x: np.nanmean(np.stack(x), axis=0)}).reset_index()
+                df.append(opto_data)
+        gc.collect()
 
-        df = pd.concat(df)
-        df['wf_image_sub'] = df.apply(lambda x: x['wf_image'] - np.nanmean(x['wf_image'][:10], axis=0),axis=1)
-        mouse_avg = df.groupby(by=['mouse_id', 'context', 'trial_type', 'opto_stim_coord']).agg({'wf_image_sub': lambda x: np.nanmean(np.stack(x), axis=0)}).reset_index()
-        avg = mouse_avg.groupby(by=['context', 'trial_type', 'opto_stim_coord']).agg({'wf_image_sub': lambda x: np.nanmean(np.stack(x), axis=0)}).reset_index()
+    # concat and aggregate
+    df = pd.concat(df, ignore_index=True)
 
-        avg.to_csv(os.path.join(result_path, f"avg_wf_image_sub.csv"))
+    mouse_avg = df.groupby(
+        by=['mouse_id', 'context', 'trial_type', 'opto_stim_coord']
+    ).agg({'wf_image_sub': lambda x: np.nanmean(np.stack(x), axis=0)}).reset_index()
+    avg = mouse_avg.groupby(
+        by=['context', 'trial_type', 'opto_stim_coord']
+    ).agg({'wf_image_sub': lambda x: np.nanmean(np.stack(x), axis=0)}).reset_index()
+
+    with open(os.path.join(result_path, "avg_wf_image_sub.pkl"), 'wb') as f:
+        pickle.dump(avg, f)
+    del avg
+    gc.collect()
+
 # ---------------------------------------------------------------------------------------------------------------------
 main_dir = Path(__file__).parent.parent
 session_path = Path(os.path.join(main_dir, 'configs', 'session_groups'))
@@ -106,7 +126,9 @@ os.makedirs(results_path, exist_ok=True)
 with open(group_file, 'r', encoding='utf8') as stream:
     config_dict = yaml.safe_load(stream)
 nwb_files = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+print(f'Extract data from {len(nwb_files)} sessions')
 plot_example_stim_images(nwb_files, results_path)
+print(f'Data saved to {results_path}')
 
 ## Photoactivation example images (Figure 4 - supp)
 print('\nExtracting data for optogenetic widefield photoactivation effect')
@@ -116,5 +138,7 @@ os.makedirs(results_path, exist_ok=True)
 with open(group_file, 'r', encoding='utf8') as stream:
     config_dict = yaml.safe_load(stream)
 nwb_files = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+print(f'Extract data from {len(nwb_files)} sessions')
 plot_example_stim_images(nwb_files, results_path)
+print(f'Data saved to {results_path}')
 
