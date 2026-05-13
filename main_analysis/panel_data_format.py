@@ -148,7 +148,24 @@ if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copytree(src, dest1)
 
-## 2CDE
+matches = glob.glob(os.path.join(results_dir, 'optogenetic_behavior_resutls', 'VGAT'))
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copytree(src, dest1)
+    else:
+        # dest1 already exists, copy contents into it
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dest1, item)
+            if os.path.isdir(s):
+                if not os.path.exists(d):
+                    shutil.copytree(s, d)
+            else:
+                if not os.path.exists(d):
+                    shutil.copy2(s, d)
+
+## 2F
 matches = glob.glob(os.path.join(results_dir, 'figure2', '2F'))
 dest1 = os.path.join(published_data_folder, 'figure2', '2F')
 if matches and not os.path.exists(dest1):
@@ -164,6 +181,23 @@ dest1 = os.path.join(published_data_folder, 'figure2_supp', '1DE')
 if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copytree(src, dest1)
+
+matches = glob.glob(os.path.join(results_dir, 'optogenetic_behavior_resutls', 'controls'))
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copytree(src, dest1)
+    else:
+        # dest1 already exists, copy contents into it
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dest1, item)
+            if os.path.isdir(s):
+                if not os.path.exists(d):
+                    shutil.copytree(s, d)
+            else:
+                if not os.path.exists(d):
+                    shutil.copy2(s, d)
 
 ## Supp 2ABC
 matches = glob.glob(os.path.join(results_dir, 'figure2_supp', '2ABC'))
@@ -267,3 +301,50 @@ dest1 = os.path.join(published_data_folder, 'figure3_supp', '5BC')
 if matches and not os.path.exists(dest1):
     src = matches[0]
     shutil.copytree(src, dest1)
+
+
+# #################################################################
+# Figure 4 & supplementary
+# #################################################################
+# 4AB
+matches = glob.glob(os.path.join(results_dir, 'processed_pixel_correlation_data', 'wf_correlation_jrGECO'))
+dest1 = os.path.join(published_data_folder, 'figure4', '4AB')
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copytree(src, dest1)
+
+matches = glob.glob(os.path.join(results_dir, 'processed_pixel_correlation_data', 'wf_correlation_jrGECO',
+                                 'combined_avg_correlation_results.json'))
+dest1 = os.path.join(published_data_folder, 'figure4', '4AB')
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copy2(src, dest1)
+
+# 4C
+matches = glob.glob(os.path.join(results_dir, 'optogenetic_widefield_examples', 'opto', 'avg_wf_image_sub.pkl'))
+dest1 = os.path.join(published_data_folder, 'figure4', '4C', 'avg_wf_image_sub.pkl')
+os.makedirs(os.path.dirname(dest1), exist_ok=True)
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copy2(src, dest1)
+
+## 4DG
+matches = glob.glob(os.path.join(results_dir, 'optogenetic_widefield_resutls', 'VGAT'))
+dest1 = os.path.join(published_data_folder, 'figure4', '4DG', 'VGAT')
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copytree(src, dest1)
+
+#4 Supp2A
+matches = glob.glob(os.path.join(results_dir, 'optogenetic_widefield_examples', 'photoactivation', 'avg_wf_image_sub.pkl'))
+dest1 = os.path.join(published_data_folder, 'figure4_supp', '2A', 'avg_wf_image_sub.pkl')
+os.makedirs(os.path.dirname(dest1), exist_ok=True)
+if matches:
+    src = matches[0]
+    if not os.path.exists(dest1):
+        shutil.copy2(src, dest1)
+
