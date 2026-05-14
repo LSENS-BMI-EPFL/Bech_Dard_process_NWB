@@ -37,6 +37,7 @@ python path/to/repo/main_analysis/figure4_analysis.py
 python path/to/repo/main_analysis/process_deeplabcutdata.py
 python path/to/repo/main_analysis/process_opto_widefield_examples.py
 python path/to/repo/main_analysis/pixel_correlation_analysis.py
+python path/to/repo/main_analysis/pixel_correlation_processing.py
 ```
 **Warning** : _pixel_correlation_analysis_ script may run for multiple days (was previously optimized to run on HPC)
 
