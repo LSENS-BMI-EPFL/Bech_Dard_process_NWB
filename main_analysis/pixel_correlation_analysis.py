@@ -192,8 +192,7 @@ def main(groups, output_path):
 if __name__ == '__main__':
     main_dir = Path(__file__).parent.parent
     session_path = Path(os.path.join(main_dir, 'configs', 'session_groups'))
-    group_files = [os.path.join(session_path, f'sessions_Context_sessions_expert_WF_jrGECO.yaml'),
-                   os.path.join(session_path, f'sessions_Context_sessions_wf_opto.yaml')]
+    group_files = [os.path.join(session_path, f'sessions_Context_sessions_expert_WF_jrGECO.yaml')]
     results_path = os.path.join(main_dir, 'results', 'processed_pixel_correlation_data')
     os.makedirs(results_path, exist_ok=True)
     main(group_files, results_path)
