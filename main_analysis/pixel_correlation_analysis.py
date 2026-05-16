@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from pathlib import Path
+from numba import njit, prange
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -66,13 +67,15 @@ def get_frames_by_epoch(nwb_session, trials, wf_timestamps, start=-200, stop=200
     return data_frames
 
 
+@njit()
 def correlate(x, y):
     return np.corrcoef(x, y)
 
 
+@njit(parallel=True)
 def compute_corr_numpy(template, target, r):
 
-    for trial in tqdm(range(template.shape[0]), desc='Trial correlation ...'):
+    for trial in prange(template.shape[0]):
         for px in range(target.shape[0]):
             r[trial, px] = correlate(template[trial, :], target[px, trial, :])[1, 0]
 
@@ -125,8 +128,7 @@ def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_ro
 
     return trial_table
 # ---------------------------------------------------------------------------------------------------------------
-
- # This code was run with parallelization on a cluster
+# This code was run with parallelization on a cluster
 def main(groups, output_path):
     for group in groups:
         group_id = os.path.basename(group).split('_')[-1].split('.')[0]

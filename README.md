@@ -19,7 +19,7 @@ conda install git
 ```
 ### Install remaining dependencies
 ```bash
-pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0" "pyarrow>=16"
+pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0" "pyarrow>=16" "numba"
 ```
 
 # **How to use - Reproduce intermediate data**

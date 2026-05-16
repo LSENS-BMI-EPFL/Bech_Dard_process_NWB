@@ -13,7 +13,7 @@ from cicada_analysis.cicada_tools.core.array_utils import find_nearest
 def build_features_table(nwb_list):
     concatenated_behavior = []
     concatenated_dlc_features = []
-    for nwb_file in tqdm(nwb_list, desc='Extract features for model trainng ... '):
+    for nwb_file in tqdm(nwb_list, desc='Extract features for model training ... '):
         with NWBSession(nwb_file) as session_data:
             bhv_df = session_data.behavior.get_trial_table().copy(deep=True)
             bhv_df['mouse_id'] = session_data.subject_id
