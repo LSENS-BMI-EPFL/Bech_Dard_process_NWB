@@ -1,0 +1,14 @@
+[project]
+name = "bech-dard-process-nwb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cicada-analysis",
+    "explain-behaviour",
+]
+
+[tool.uv.sources]
+cicada-analysis = { git = "https://gitlab.com/cossartlab/cicada_analysis.git", rev = "0.3.0" }
+explain-behaviour = { git = "https://github.com/JulesLebert/explain_behaviour.git" }
