@@ -7,6 +7,9 @@ requires-python = ">=3.11"
 dependencies = [
     "cicada-analysis",
     "explain-behaviour",
+    "numpy>=2,<3",
+    "shap==0.47",
+    "xgboost==3.0.2",
 ]
 
 [tool.uv.sources]
