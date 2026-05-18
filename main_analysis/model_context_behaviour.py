@@ -18,6 +18,13 @@ from cicada_analysis.cicada_tools.core.array_utils import find_nearest
 # ----------------------------------------------------------------------------------------------------------------------
 # UTILS
 # ----------------------------------------------------------------------------------------------------------------------
+def unc_to_mac_path(path_name, base_dir='/Volumes'):
+    """Convert a UNC-style path (//server/share/...) to a macOS /Volumes/... path."""
+    parts = [p for p in path_name.split('/') if p]
+    # parts[0] is server name, parts[1] is share name, rest is the subpath
+    mac_path = Path(base_dir, *parts[1:])
+    return mac_path
+
 def build_features_table(nwb_list):
     concatenated_behavior = []
     concatenated_dlc_features = []
@@ -29,9 +36,11 @@ def build_features_table(nwb_list):
             bhv_df = bhv_df.loc[bhv_df.early_lick == 0].reset_index(drop=True)
             concatenated_behavior.append(bhv_df)
 
-            trial_starts = bhv_df['trial_start'].values[:]
+            trial_starts = bhv_df['start_time'].values[:]
             bodyparts = ['pupil_area', 'whisker_velocity', 'jaw_angle']
             dlc_times = session_data.behavior.get_behavioral_time_series_timestamps(serie_name=bodyparts[0])
+            if dlc_times is None:
+                continue
             trial_start_frame = [find_nearest(dlc_times, trial_start) for trial_start in trial_starts]
             quiet_window_start = [find_nearest(dlc_times, (trial_start - 2)) for trial_start in trial_starts]
             frames_to_take = [np.arange(quiet_window_start[i], trial_start_frame[i]) for i in range(len(trial_starts))]
@@ -152,6 +161,7 @@ if __name__ == '__main__':
     with open(analysis_config_path, 'r', encoding='utf8') as stream:
         analysis_config = yaml.safe_load(stream)
     nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+    nwb_paths = [unc_to_mac_path(p) for p in nwb_paths]
     mice_list = list(set([config_dict['sessions'][i]['identifier'][0:5] for i in range(len(config_dict['sessions']))]))
     print(f'\n Start behaviour modelling {len(nwb_paths)} sessions - {len(mice_list)} mice')
     results_path = os.path.join(main_dir, 'results', 'behaviour_modelling_results')
