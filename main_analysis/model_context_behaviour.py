@@ -45,6 +45,7 @@ def build_features_table(nwb_list):
             quiet_window_start = [find_nearest(dlc_times, (trial_start - 2)) for trial_start in trial_starts]
             frames_to_take = [np.arange(quiet_window_start[i], trial_start_frame[i]) for i in range(len(trial_starts))]
 
+            dlc_nwb_keys = ['behavior', 'BehavioralTimeSeries']
             thresholds = {
                 'jaw_angle': 0.6,
                 'pupil_area': 0.6,
@@ -58,7 +59,7 @@ def build_features_table(nwb_list):
                 kinematic = key.split("_")[-1]
                 root = re.sub(kinematic, '', key)
                 suffix = 'base_likelihood' if 'whisker' in key or 'top_nose' in key else 'likelihood'
-                likelihood = session_data.petersen.get_dlc_data(key, root + suffix)
+                likelihood = session_data.petersen.get_dlc_data(dlc_nwb_keys, root + suffix)
                 data = np.where(likelihood >= thresholds[key], data, 0 if 'tongue' in key else np.nan)
                 # Center
                 data = data - np.nanmean(data[175:200])
