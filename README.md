@@ -17,7 +17,7 @@ conda activate bech_dard_nwb_process
 ```bash
 conda install git
 ```
-### Install remaining dependencies
+### Install dependencies
 ```bash
 cd /path/to/Bech_Dard_process_NWB
 pip install -e .
