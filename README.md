@@ -19,7 +19,8 @@ conda install git
 ```
 ### Install remaining dependencies
 ```bash
-pip install "git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0" "pyarrow>=16" "numba"
+cd /path/to/Bech_Dard_process_NWB
+pip install -e .
 ```
 
 # **How to use - Reproduce intermediate data**
