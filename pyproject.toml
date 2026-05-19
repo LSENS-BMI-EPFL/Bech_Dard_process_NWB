@@ -8,6 +8,7 @@ dependencies = [
     "cicada-analysis",
     "explain-behaviour",
     "numpy>=2,<3",
+    "pyarrow>=24.0.0",
     "shap==0.47",
     "xgboost==3.0.2",
 ]
