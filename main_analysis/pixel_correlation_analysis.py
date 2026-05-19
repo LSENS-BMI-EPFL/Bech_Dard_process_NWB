@@ -132,8 +132,8 @@ def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_ro
 def main(groups, output_path):
     for group in groups:
         group_id = os.path.basename(group).split('_')[-1].split('.')[0]
-        saving_path = os.path.join(output_path, f'wf_correlation_{group_id}')
-        os.makedirs(saving_path, exist_ok=True)
+        main_saving_path = os.path.join(output_path, f'wf_correlation_{group_id}')
+        os.makedirs(main_saving_path, exist_ok=True)
 
         with open(group, 'r', encoding='utf8') as stream:
             config_dict = yaml.safe_load(stream)
@@ -149,7 +149,7 @@ def main(groups, output_path):
                 print(f"\nMouse : {mouse_id}, session : {session_id}")
 
                 # Adjust saving path :
-                saving_path = os.path.join(saving_path, mouse_id, session_id)
+                saving_path = os.path.join(main_saving_path, mouse_id, session_id)
                 os.makedirs(saving_path, exist_ok=True)
 
                 # Get trial table
