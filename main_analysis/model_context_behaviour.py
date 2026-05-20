@@ -19,13 +19,6 @@ rng = np.random.default_rng(20)
 # ----------------------------------------------------------------------------------------------------------------------
 # UTILS
 # ----------------------------------------------------------------------------------------------------------------------
-def unc_to_mac_path(path_name, base_dir='/Volumes'):
-    """Convert a UNC-style path (//server/share/...) to a macOS /Volumes/... path."""
-    parts = [p for p in path_name.split('/') if p]
-    # parts[0] is server name, parts[1] is share name, rest is the subpath
-    mac_path = Path(base_dir, *parts[1:])
-    return mac_path
-
 def build_features_table(nwb_list):
     concatenated_behavior = []
     concatenated_dlc_features = []
@@ -173,8 +166,6 @@ if __name__ == '__main__':
     with open(analysis_config_path, 'r', encoding='utf8') as stream:
         analysis_config = yaml.safe_load(stream)
     nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
-    # nwb_paths = [unc_to_mac_path(p) for p in nwb_paths]
-    nwb_paths = [Path(re.sub(r'^.*?(?=publications)', '/raid0/lebert/labsrv/', str(p))) if 'publications' in str(p) else Path(str(p)) for p in nwb_paths]
     mice_list = list(set([config_dict['sessions'][i]['identifier'][0:5] for i in range(len(config_dict['sessions']))]))
     print(f'\n Start behaviour modelling {len(nwb_paths)} sessions - {len(mice_list)} mice')
     results_path = Path(main_dir, 'results', 'behaviour_modelling_results')
