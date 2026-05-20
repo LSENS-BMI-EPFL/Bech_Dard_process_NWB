@@ -14,6 +14,7 @@ from explain_behaviour.preprocessing.trial_features import prepare_behavior_feat
 from cicada_nwb.nwb_session import NWBSession
 from cicada_analysis.cicada_tools.core.array_utils import find_nearest
 
+rng = np.random.default_rng(20)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # UTILS
@@ -31,8 +32,8 @@ def build_features_table(nwb_list):
     for nwb_file in tqdm(nwb_list, desc='Extract features for model training ... '):
         with NWBSession(nwb_file) as session_data:
             bhv_df = session_data.behavior.get_trial_table().copy(deep=True)
-            bhv_df['mouse_id'] = session_data.subject_id
-            bhv_df['session_id'] = session_data.session_id
+            bhv_df['subject'] = session_data.subject_id
+            bhv_df['session_name'] = session_data.session_id
             bhv_df = bhv_df.loc[bhv_df.early_lick == 0].reset_index(drop=True)
             concatenated_behavior.append(bhv_df)
 
@@ -64,10 +65,20 @@ def build_features_table(nwb_list):
                 # Center
                 data = data - np.nanmean(data[175:200])
                 if 'jaw' in key:
-                    dlc_features[key] = [np.nanmean(np.abs(np.diff(data[frames]))) for frames in frames_to_take]
+                    n_frames = len(data)
+                    dlc_features[key] = [
+                        np.nanmean(np.abs(np.diff(data[frames]))) if len(frames) else np.nan
+                        for frames in (frames[frames < n_frames] for frames in frames_to_take)
+                    ]
                 else:
-                    dlc_features[key] = [np.nanmean(np.abs(data[frames])) for frames in frames_to_take]
+                    n_frames = len(data)
+                    dlc_features[key] = [
+                        np.nanmean(np.abs(data[frames])) if len(frames) else np.nan
+                        for frames in (frames[frames < n_frames] for frames in frames_to_take)
+                    ]
             dlc_features_df = pd.DataFrame(dlc_features)
+            dlc_features_df['subject'] = session_data.subject_id
+            dlc_features_df['session_name'] = session_data.session_id
             concatenated_dlc_features.append(dlc_features_df)
 
     return pd.concat(concatenated_behavior), pd.concat(concatenated_dlc_features)
@@ -124,12 +135,13 @@ def combine_bhv_and_dlc(
         df_dlc,
     ):
     df_bhv['trial_id'] = df_bhv.groupby('session_name').cumcount()
+    df_dlc['trial_id'] = df_dlc.groupby('session_name').cumcount()
     
     df_merged = pd.merge(
         df_bhv,
         df_dlc,
         left_on=['session_name', 'trial_id'],
-        right_on=['session_id', 'trial_id'],
+        right_on=['session_name', 'trial_id'],
         how='inner',
         suffixes=('', '_y')  # Keep original column names for left df, add _y suffix for right df
     )
@@ -143,7 +155,6 @@ def combine_bhv_and_dlc(
 def main(nwb_list, analysis_config, output_path):
     bhv_data, dlc_feat = build_features_table(nwb_list)
     df = combine_bhv_and_dlc(bhv_data, dlc_feat)
-    # TODO : pass to explain bhv method
     results = run_behaviour_model(df, analysis_config, output_path)
     if analysis_config['mode'] == 'classification':
         print(f"\nBalanced Accuracy: {results['metrics']['balanced_accuracy']:.3f}")
@@ -162,11 +173,12 @@ if __name__ == '__main__':
     with open(analysis_config_path, 'r', encoding='utf8') as stream:
         analysis_config = yaml.safe_load(stream)
     nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
-    nwb_paths = [unc_to_mac_path(p) for p in nwb_paths]
+    # nwb_paths = [unc_to_mac_path(p) for p in nwb_paths]
+    nwb_paths = [Path(re.sub(r'^.*?(?=publications)', '/raid0/lebert/labsrv/', str(p))) if 'publications' in str(p) else Path(str(p)) for p in nwb_paths]
     mice_list = list(set([config_dict['sessions'][i]['identifier'][0:5] for i in range(len(config_dict['sessions']))]))
     print(f'\n Start behaviour modelling {len(nwb_paths)} sessions - {len(mice_list)} mice')
-    results_path = os.path.join(main_dir, 'results', 'behaviour_modelling_results')
-    os.makedirs(results_path, exist_ok=True)
+    results_path = Path(main_dir, 'results', 'behaviour_modelling_results')
+    results_path.mkdir(parents=True, exist_ok=True)
     main(nwb_paths, analysis_config, results_path)
 
 

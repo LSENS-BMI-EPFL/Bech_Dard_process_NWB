@@ -31,9 +31,9 @@ whisker_features:
   - lick_flag
 
 dlc_features:
-  - pupil_area_nanmean
-  - whisker_velocity_mean_abs
-  - jaw_angle_mean_abs_diff
+  - pupil_area
+  - whisker_velocity
+  - jaw_angle
 
 feature_labels:
   - Context
