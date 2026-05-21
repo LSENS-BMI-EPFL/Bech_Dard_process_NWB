@@ -82,7 +82,7 @@ def compute_corr_numpy(template, target, r):
     return r
 
 
-def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_roi, data_frames, output_path):
+def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_roi, data_frames, output_path, n_shuffles=1000):
     for roi in ['(-0.5, 0.5)', '(-1.5, 0.5)', '(-1.5, 3.5)',
                 '(-1.5, 4.5)', '(1.5, 3.5)', '(1.5, 1.5)',
                 '(2.5, 2.5)', '(0.5, 4.5)']:
@@ -97,7 +97,7 @@ def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_ro
 
         # Shuffle blocks
         block_shuffle = []
-        for i in tqdm(range(1000), desc='Shuffle correlations ...'):
+        for i in tqdm(range(n_shuffles), desc='Shuffle correlations ...'):
             block_id = np.abs(np.diff(trial_table.context.values, prepend=0)).cumsum()
             shuffle = np.hstack([np.where(block_id == block) for block in np.random.permutation(np.unique(block_id))])[
                 0]
@@ -129,7 +129,7 @@ def trial_based_correlation(mouse_id, session_id, trial_table, dict_roi, data_ro
     return trial_table
 # ---------------------------------------------------------------------------------------------------------------
 # This code was run with parallelization on a cluster
-def main(groups, output_path):
+def main(groups, output_path, n_shuffles=1000):
     for group in groups:
         group_id = os.path.basename(group).split('_')[-1].split('.')[0]
         main_saving_path = os.path.join(output_path, f'wf_correlation_{group_id}')
@@ -183,7 +183,8 @@ def main(groups, output_path):
 
                 print('Start trial based correlation')
                 results = trial_based_correlation(mouse_id, session_id, trial_table, dict_roi,
-                                                  data_roi, data_frames, saving_path)
+                                                  data_roi, data_frames, saving_path,
+                                                  n_shuffles=n_shuffles)
                 print(f'Results saved to {saving_path}')
 
         return
