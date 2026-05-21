@@ -37,10 +37,12 @@ python path/to/repo/main_analysis/figure3_supp_analysis.py
 python path/to/repo/main_analysis/figure4_analysis.py
 python path/to/repo/main_analysis/process_deeplabcutdata.py
 python path/to/repo/main_analysis/process_opto_widefield_examples.py
+python path/to/main_analysis/model_context_behaviour.py
 python path/to/repo/main_analysis/pixel_correlation_analysis.py
 python path/to/repo/main_analysis/pixel_correlation_processing.py
 ```
-**Warning** : _pixel_correlation_analysis_ script may run for multiple days (was previously optimized to run on HPC)
+**Warning** : _pixel_correlation_analysis_ was previously optimized to run on HPC.  
+To run a test change in the _`pixel_correlation_analysis.py`_ file the number of shuffles from 1000 to 20
 
 ## Output
 Each script is going to populate a results folder created within the main folder.
