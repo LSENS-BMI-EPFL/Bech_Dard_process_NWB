@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = "==3.11.*"
 dependencies = [
     "cicada-analysis @ git+https://gitlab.com/cossartlab/cicada_analysis.git@0.3.0",
-    "explain-behaviour @ git+https://github.com/JulesLebert/explain_behaviour.git",
+    "explain-behaviour @ git+https://github.com/JulesLebert/explain_behaviour.git@v1.0.1",
     "numpy>=2,<3",
     "pyarrow>=24.0.0",
     "shap==0.47",
