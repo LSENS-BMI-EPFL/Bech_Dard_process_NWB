@@ -1,0 +1,63 @@
+random_state: 123
+analysis_params:
+  file_prefix: whisker_all_contexts
+  n_trials: 1000
+  optimize: true
+  use_smote: false
+categorical_columns:
+- Context
+- Mouse ID
+- Previous trial correct
+- Previous whisker rewarded
+- Last stimulus type
+- Session ID
+dlc_features:
+- pupil_area_nanmean
+- jaw_y_nanmean
+- whisker_velocity_mean_abs
+- whisker_angle_mean
+- jaw_y_mean_abs_diff
+dlc_features_labels:
+- Pupil Area
+- Jaw y
+- Whisker Speed
+- Whisker Angle
+- Jaw Speed
+feature_labels:
+- Context
+- Mouse ID
+- Cumulative water
+- Previous trial correct
+- Whisker trial in block
+- Previous trial water
+- Last stimulus type
+- Previous whisker rewarded
+- Time since last stimulus
+- Lick flag
+- Pupil Area
+- Jaw y
+- Whisker Speed
+- Whisker Angle
+- Jaw Speed
+interaction_features_discrete:
+- - Whisker trial in block
+  - Context
+leave_out_one_session: true
+mode: classification
+outcome_column: Lick flag
+whisker_features:
+- context
+- subject
+- cum_water
+- prev_trial_correct
+- whisker_trial_in_block
+- prev_trial_water
+- last_stimulus_type
+- prev_whisker_rewarded
+- time_since_last_stimulus
+- lick_flag
+- pupil_area_nanmean
+- jaw_y_nanmean
+- whisker_velocity_mean_abs
+- whisker_angle_mean
+- jaw_y_mean_abs_diff

@@ -20,61 +20,129 @@ rng = np.random.default_rng(20)
 # UTILS
 # ----------------------------------------------------------------------------------------------------------------------
 def build_features_table(nwb_list):
+    """Extract behavior trial tables and compute DLC features from NWB files.
+
+    DLC computation replicates dlc_analysis.get_traces_by_epoch(center=True)
+    from the original nwb_analysis pipeline.
+    """
     concatenated_behavior = []
-    concatenated_dlc_features = []
     for nwb_file in tqdm(nwb_list, desc='Extract features for model training ... '):
         with NWBSession(nwb_file) as session_data:
             bhv_df = session_data.behavior.get_trial_table().copy(deep=True)
             bhv_df['subject'] = session_data.subject_id
             bhv_df['session_name'] = session_data.session_id
             bhv_df = bhv_df.loc[bhv_df.early_lick == 0].reset_index(drop=True)
-            concatenated_behavior.append(bhv_df)
 
-            trial_starts = bhv_df['start_time'].values[:]
-            bodyparts = ['pupil_area', 'whisker_velocity', 'jaw_angle']
-            dlc_times = session_data.behavior.get_behavioral_time_series_timestamps(serie_name=bodyparts[0])
+            dlc_times = session_data.behavior.get_behavioral_time_series_timestamps(
+                serie_name='pupil_area'
+            )
             if dlc_times is None:
-                continue
-            trial_start_frame = [find_nearest(dlc_times, trial_start) for trial_start in trial_starts]
-            quiet_window_start = [find_nearest(dlc_times, (trial_start - 2)) for trial_start in trial_starts]
-            frames_to_take = [np.arange(quiet_window_start[i], trial_start_frame[i]) for i in range(len(trial_starts))]
+                continue  # skip sessions without DLC (matches original inner-join exclusion)
+
+            fr = 1 / np.median(np.diff(dlc_times))
+            nframes_window = int(round(2 * fr))  # ~400 at 200 Hz
+
+            trial_starts = bhv_df['start_time'].values
+            trial_start_idx = np.array([find_nearest(dlc_times, t) for t in trial_starts])
+            window_start_idx = np.array([find_nearest(dlc_times, t - 2) for t in trial_starts])
 
             dlc_nwb_keys = ['behavior', 'BehavioralTimeSeries']
-            thresholds = {
-                'jaw_angle': 0.6,
-                'pupil_area': 0.6,
-                'whisker_velocity':0.8,
-            }
-            dlc_features = dict({f'{part}' : [] for part in bodyparts})
-            for index, key in enumerate(bodyparts):
-                # Get dlc data
-                data = session_data.behavior.get_behavioral_time_series_data(serie_name=key)
-                # Filter with likelihood
-                kinematic = key.split("_")[-1]
-                root = re.sub(kinematic, '', key)
-                suffix = 'base_likelihood' if 'whisker' in key or 'top_nose' in key else 'likelihood'
-                likelihood = session_data.petersen.get_dlc_data(dlc_nwb_keys, root + suffix)
-                data = np.where(likelihood >= thresholds[key], data, 0 if 'tongue' in key else np.nan)
-                # Center
-                data = data - np.nanmean(data[175:200])
-                if 'jaw' in key:
-                    n_frames = len(data)
-                    dlc_features[key] = [
-                        np.nanmean(np.abs(np.diff(data[frames]))) if len(frames) else np.nan
-                        for frames in (frames[frames < n_frames] for frames in frames_to_take)
-                    ]
-                else:
-                    n_frames = len(data)
-                    dlc_features[key] = [
-                        np.nanmean(np.abs(data[frames])) if len(frames) else np.nan
-                        for frames in (frames[frames < n_frames] for frames in frames_to_take)
-                    ]
-            dlc_features_df = pd.DataFrame(dlc_features)
-            dlc_features_df['subject'] = session_data.subject_id
-            dlc_features_df['session_name'] = session_data.session_id
-            concatenated_dlc_features.append(dlc_features_df)
+            thresholds = {'pupil_area': 0.6, 'whisker_velocity': 0.8, 'jaw_y': 0.6, 'whisker_angle': 0.8}
 
-    return pd.concat(concatenated_behavior), pd.concat(concatenated_dlc_features)
+            dlc_results = {
+                'pupil_area_nanmean': [],
+                'whisker_velocity_mean_abs': [],
+                'jaw_y_nanmean': [],
+                'jaw_y_mean_abs_diff': [],
+                'whisker_angle_mean': [],
+            }
+
+            # Session-level NaN filter replicates get_likelihood_filtered_bodypart:
+            # skip session if any non-pupil, non-tongue part has >30% low-likelihood frames.
+            # jaw_angle is checked here (not used as feature); whisker_angle is checked in
+            # the main feature loop below.
+            session_skip = False
+            extra_filter_keys = {
+                'jaw_angle': ('jaw_', 'likelihood', 0.6),
+            }
+            for fkey, (froot, fsuffix, fthresh) in extra_filter_keys.items():
+            #     try:
+                fraw = session_data.behavior.get_behavioral_time_series_data(serie_name=fkey)
+                flike = session_data.petersen.get_dlc_data(dlc_nwb_keys, froot + fsuffix)
+                fdata = np.where(flike >= fthresh, fraw, np.nan).astype(float)
+                if np.isnan(fdata).mean() > 0.3:
+                    session_skip = True
+                    break
+                # except Exception:
+                #     pass  # part absent in this NWB — don't skip on missing data
+
+            if session_skip:
+                continue
+
+            part_data = {}
+            for key in ['pupil_area', 'whisker_velocity', 'jaw_y', 'whisker_angle']:
+                raw_data = session_data.behavior.get_behavioral_time_series_data(serie_name=key)
+                kinematic = key.split('_')[-1]
+                root = re.sub(kinematic, '', key)
+                suffix = 'base_likelihood' if 'whisker' in key else 'likelihood'
+                likelihood = session_data.petersen.get_dlc_data(dlc_nwb_keys, root + suffix)
+                data = np.where(likelihood >= thresholds[key], raw_data, np.nan).astype(float)
+
+                # pupil_area exempt from session skip (matches 'pupil' not in part in original)
+                if key != 'pupil_area' and np.isnan(data).mean() > 0.3:
+                    session_skip = True
+                    break
+
+                part_data[key] = data
+
+            if session_skip:
+                continue
+
+            for key, data in part_data.items():
+                # jaw_y: subtract 5th-percentile of valid session values (global baseline)
+                if key == 'jaw_y':
+                    valid = data[~np.isnan(data)]
+                    if len(valid) > 0:
+                        data = data - np.percentile(valid, 5)
+
+                n_total = len(data)
+                for ws, we in zip(window_start_idx, trial_start_idx):
+                    frames = np.arange(ws, min(we, n_total))
+                    if len(frames) == 0:
+                        window = np.array([np.nan])
+                    else:
+                        window = data[frames].copy()
+
+                    # per-trial centering: subtract mean of baseline frames 175:200
+                    if len(window) >= 200:
+                        center_val = np.nanmean(window[175:200])
+                    elif len(window) > 0:
+                        center_val = np.nanmean(window)
+                    else:
+                        center_val = np.nan
+                    window = window - center_val
+
+                    if key == 'pupil_area':
+                        dlc_results['pupil_area_nanmean'].append(np.nanmean(window))
+                    elif key == 'whisker_velocity':
+                        # diff per trial (center cancels: diff(x-c)=diff(x)), matching original
+                        wv_diff = np.full(len(window), np.nan)
+                        if len(window) > 1:
+                            wv_diff[1:] = np.diff(window) * nframes_window
+                        dlc_results['whisker_velocity_mean_abs'].append(np.nanmean(np.abs(wv_diff)))
+                    elif key == 'jaw_y':
+                        dlc_results['jaw_y_nanmean'].append(np.nanmean(window))
+                        dlc_results['jaw_y_mean_abs_diff'].append(
+                            np.nanmean(np.abs(np.diff(window))) if len(window) > 1 else np.nan
+                        )
+                    elif key == 'whisker_angle':
+                        dlc_results['whisker_angle_mean'].append(np.nanmean(window))
+
+            dlc_df = pd.DataFrame(dlc_results)
+            bhv_df = pd.concat([bhv_df.reset_index(drop=True), dlc_df], axis=1)
+            concatenated_behavior.append(bhv_df)
+
+    return pd.concat(concatenated_behavior)
 
 def run_behaviour_model(df, config, results_dir):
     df_use = prepare_behavior_features(df, config)
@@ -86,10 +154,19 @@ def run_behaviour_model(df, config, results_dir):
         df_use = df_use.loc[df_use.trial_type.isin(['whisker_trial', 'auditory_trial'])]
         df_use = df_use.loc[df_use.trial_outcome == 'Hit']
 
-    # DLC features: placeholder for when the DLC loading script is added
-    # if 'dlc_features' in config:
-    #     config['whisker_features'] = config['whisker_features'] + config['dlc_features']
-    #     config['feature_labels'] = config['feature_labels'] + config['dlc_features_labels']
+    if 'dlc_features' in config:
+        already = set(config['whisker_features'])
+        new_feats = [f for f in config['dlc_features'] if f not in already]
+        new_labels = [config['dlc_features_labels'][i]
+                      for i, f in enumerate(config['dlc_features']) if f not in already]
+        config['whisker_features'] = config['whisker_features'] + new_feats
+        config['feature_labels'] = config['feature_labels'] + new_labels
+
+    # Save checkpoint before test-session split so comparison is not confounded
+    # by which random session gets held out.
+    df_pre_split = df_use[config['whisker_features']].rename(
+        columns=dict(zip(df_use[config['whisker_features']].columns, config['feature_labels']))
+    )
 
     df_test = None
     if config['leave_out_one_session']:
@@ -100,11 +177,12 @@ def run_behaviour_model(df, config, results_dir):
     df_use = df_use[config['whisker_features']]
     df_use = df_use.rename(columns=dict(zip(df_use.columns, config['feature_labels'])))
 
+    # return None
     run_name = f"run_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}"
     save_dir = results_dir / run_name
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    analyzer = BehavioralAnalysisGBM(save_path=save_dir, mode=config['mode'])
+    analyzer = BehavioralAnalysisGBM(save_path=save_dir, mode=config['mode'], random_state=config['random_state'])
     results = analyzer.run_analysis(
         df=df_use,
         outcome_col=config['outcome_column'],
@@ -123,32 +201,9 @@ def run_behaviour_model(df, config, results_dir):
     print(f"\nSaved results to {save_dir}")
     return results
 
-def combine_bhv_and_dlc(
-        df_bhv,
-        df_dlc,
-    ):
-    df_bhv['trial_id'] = df_bhv.groupby('session_name').cumcount()
-    df_dlc['trial_id'] = df_dlc.groupby('session_name').cumcount()
-    
-    df_merged = pd.merge(
-        df_bhv,
-        df_dlc,
-        left_on=['session_name', 'trial_id'],
-        right_on=['session_name', 'trial_id'],
-        how='inner',
-        suffixes=('', '_y')  # Keep original column names for left df, add _y suffix for right df
-    )
-
-    # Drop the session_id column since we already have session_name
-    if 'session_id' in df_merged.columns:
-        df_merged = df_merged.drop(columns=['session_id'])
-
-    return df_merged
-
 def main(nwb_list, analysis_config, output_path):
-    bhv_data, dlc_feat = build_features_table(nwb_list)
-    df = combine_bhv_and_dlc(bhv_data, dlc_feat)
-    results = run_behaviour_model(df, analysis_config, output_path)
+    bhv_data = build_features_table(nwb_list)
+    results = run_behaviour_model(bhv_data, analysis_config, output_path)
     if analysis_config['mode'] == 'classification':
         print(f"\nBalanced Accuracy: {results['metrics']['balanced_accuracy']:.3f}")
         print(f"F1 Score: {results['metrics']['f1_score']:.3f}")
@@ -159,17 +214,16 @@ def main(nwb_list, analysis_config, output_path):
 if __name__ == '__main__':
     main_dir = Path(__file__).parent.parent
     session_path = Path(os.path.join(main_dir, 'configs', 'session_groups'))
-    group_file = os.path.join(session_path, f'sessions_Context_sessions_expert.yaml')
+    group_file = os.path.join(session_path, f'session_context_expert_behaviour_model.yaml')
     with open(group_file, 'r', encoding='utf8') as stream:
         config_dict = yaml.safe_load(stream)
-    analysis_config_path = main_dir / 'configs' / 'analysis_params' / 'whisker_classification_dlc.yaml'
+    analysis_config_path = main_dir / 'configs' / 'analysis_params' / 'whisker_classification.yaml'
     with open(analysis_config_path, 'r', encoding='utf8') as stream:
         analysis_config = yaml.safe_load(stream)
     nwb_paths = [config_dict['sessions'][i]['path'] for i in range(len(config_dict['sessions']))]
+
     mice_list = list(set([config_dict['sessions'][i]['identifier'][0:5] for i in range(len(config_dict['sessions']))]))
     print(f'\n Start behaviour modelling {len(nwb_paths)} sessions - {len(mice_list)} mice')
     results_path = Path(main_dir, 'results', 'behaviour_modelling_results')
     results_path.mkdir(parents=True, exist_ok=True)
     main(nwb_paths, analysis_config, results_path)
-
-
