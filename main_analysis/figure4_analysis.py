@@ -297,6 +297,6 @@ bodyparts_to_plot = ['jaw_angle', 'jaw_y', 'jaw_velocity',
 # Save intermediary dataset to reproduce panels
 kept_cols = bodyparts_to_plot + ['mouse_id', 'context', 'trial_type', 'opto_stim_coord']
 mouse_avg_df_saved = mouse_avg_df[kept_cols]
-os.makedirs(os.path.join(main_dir, 'results' 'figure2_supp', '3ABC'), exist_ok=True)
+os.makedirs(os.path.join(main_dir, 'results', 'figure2_supp', '3ABC'), exist_ok=True)
 mouse_avg_df_saved.to_csv(os.path.join(main_dir, 'results', 'figure2_supp', '3ABC', 'all_trials_bodyparts_psths.csv'))
 
