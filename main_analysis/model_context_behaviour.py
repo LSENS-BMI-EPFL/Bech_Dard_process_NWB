@@ -142,7 +142,7 @@ def build_features_table(nwb_list):
             bhv_df = pd.concat([bhv_df.reset_index(drop=True), dlc_df], axis=1)
             concatenated_behavior.append(bhv_df)
 
-    return pd.concat(concatenated_behavior)
+    return pd.concat(concatenated_behavior).reset_index(drop=True)
 
 def run_behaviour_model(df, config, results_dir):
     df_use = prepare_behavior_features(df, config)
