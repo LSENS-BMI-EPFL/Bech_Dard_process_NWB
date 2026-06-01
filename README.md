@@ -1,9 +1,9 @@
 # **Bech & Dard NWB process repository**
 
 ## NWB files processing
-This repository allows the processing NWBs files to reproduce analysis from Bech & Dard, eLife 2026.  
+This repository allows the processing NWBs files to reproduce analysis from [Bech & Dard, eLife 2026](https://elifesciences.org/reviewed-preprints/109717).  
 This README provides instruction to **set up the python environment and run the analysis code to generate intermediate data used to plot**.  
-See at the end how to reproduce the figure panels starting from the intermediate dataset. ([`Bech, Dard figures`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures))
+See at the end how to reproduce the figure panels starting from the intermediate dataset. ([`Bech, Dard figures repo`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures))
 
 # **Installation**
 
@@ -32,6 +32,8 @@ conda activate bech_dard_nwb_process
 python path/to/repo/main_analysis/figure1_analysis.py
 python path/to/repo/main_analysis/figure1_supp_analysis.py
 python path/to/repo/main_analysis/figure2_analysis.py
+python path/to/repo/main_analysis/figure2_supp_analysis.py
+python path/to/repo/main_analysis/figure2_supp_stats.py
 python path/to/repo/main_analysis/figure3_analysis.py
 python path/to/repo/main_analysis/figure3_supp_analysis.py
 python path/to/repo/main_analysis/figure4_analysis.py
@@ -61,5 +63,5 @@ This matches publicly available data on [Zenodo](https://zenodo.org/communities/
 
 ## Figure making 
 To reproduce the figure panels from the downloaded or generated intermediate dataset see:  
-- [`Bech, Dard figures`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures)
-- [`intermediate dataset`](https://zenodo.org/communities/petersen-lab-data)
+- [`Bech, Dard figures repo`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures)
+- [`Intermediate dataset`](https://zenodo.org/communities/petersen-lab-data)
