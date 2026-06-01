@@ -83,7 +83,7 @@ if matches and not os.path.exists(dest1):
     shutil.copytree(src, dest1, ignore=ignore_non_uncentered)
 
 ## 1KL
-matches = glob.glob(os.path.join(results_dir, 'behaviour_modelling_results'))
+matches = glob.glob(os.path.join(results_dir, 'behaviour_modelling_results', '*'))
 dest1 = os.path.join(published_data_folder, 'figure1', '1KL')
 if matches and not os.path.exists(dest1):
     src = matches[0]
