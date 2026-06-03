@@ -1,4 +1,3 @@
-from pynwb import NWBHDF5IO
 import h5py
 import glob
 import os
@@ -11,27 +10,18 @@ warnings.filterwarnings("ignore")
 def natural_sort_key(s):
     return [int(c) if c.isdigit() else c.lower() for c in re.split(r'(\d+)', s)]
 
-def fix_broken_acquisitions(nwb_file):
-    """Remove dangling acquisition links using h5py, returns list of removed keys."""
-    removed = []
-    with h5py.File(nwb_file, 'r+') as f:
-        if '/acquisition' not in f:
-            return removed
-        for key in list(f['/acquisition'].keys()):
-            try:
-                _ = f['/acquisition'][key][()]
-            except Exception:
-                del f['/acquisition'][key]
-                removed.append(key)
-    return removed
 
-def needs_fixing(nwb_file, publication):
-    """Check if the file needs metadata fixing."""
-    with NWBHDF5IO(nwb_file, "r") as io:
-        nwb_data = io.read()
-        pub_ok = publication in nwb_data.related_publications
-        weight = nwb_data.subject.weight
-        weight_ok = weight and weight != 'na' and weight.endswith('g')
+def needs_fixing(f, publication):
+    pub = f['/general/related_publications'][()].tolist()
+    pub = [p.decode('utf-8') if isinstance(p, bytes) else p for p in pub]
+    pub_ok = publication in pub
+
+    if '/general/subject/weight' in f:
+        weight = f['/general/subject/weight'][()].decode('utf-8')
+        weight_ok = weight and weight != 'na' and weight.endswith(' g')
+    else:
+        weight_ok = False
+
     return not pub_ok or not weight_ok
 
 
@@ -43,33 +33,50 @@ publication = 'https://elifesciences.org/reviewed-preprints/109717'
 tqdm.write("=== Pass 1: Fixing broken acquisitions ===")
 for nwb_file in tqdm(nwb_files, desc="Scanning acquisitions"):
     try:
-        removed = fix_broken_acquisitions(nwb_file)
-        if removed:
-            tqdm.write(f"Removed {removed} from {os.path.basename(nwb_file)}")
+        with h5py.File(nwb_file, 'r+') as f:
+            if '/acquisition' not in f:
+                continue
+            for key in list(f['/acquisition'].keys()):
+                try:
+                    _ = f['/acquisition'][key][()]
+                except Exception:
+                    del f['/acquisition'][key]
+                    tqdm.write(f"Removed '{key}' from {os.path.basename(nwb_file)}")
     except Exception as e:
         tqdm.write(f"h5py failed on {os.path.basename(nwb_file)}: {e}")
 
-# --- Pass 2: fix metadata, skip already-fixed files ---
+# --- Pass 2: fix metadata ---
 tqdm.write("=== Pass 2: Fixing metadata ===")
 for nwb_file in tqdm(nwb_files, desc="Fixing metadata"):
     try:
-        if not needs_fixing(nwb_file, publication):
-            continue
+        with h5py.File(nwb_file, 'r+') as f:
+            if not needs_fixing(f, publication):
+                continue
 
-        with NWBHDF5IO(nwb_file, "r+") as io:
-            nwb_data = io.read()
-            subject_data = nwb_data.subject
+            # Fix related_publications
+            pub = f['/general/related_publications'][()].tolist()
+            pub = [p.decode('utf-8') if isinstance(p, bytes) else p for p in pub]
+            if publication not in pub:
+                del f['/general/related_publications']
+                f['/general'].create_dataset('related_publications', data=[publication])
+                tqdm.write(f"Publication fixed for {os.path.basename(nwb_file)}")
 
-            if publication not in nwb_data.related_publications:
-                nwb_data.fields['related_publications'] = (publication,)
+            # Fix weight
+            if '/general/subject/weight' in f:
+                weight = f['/general/subject/weight'][()].decode('utf-8')
+                del f['/general/subject/weight']
+            else:
+                weight = None
 
-            weight = subject_data.weight
             if not weight or weight == 'na':
-                subject_data.fields['weight'] = '0 g'
-            elif not weight.endswith('g'):
-                subject_data.fields['weight'] = f'{weight} g'
+                new_weight = '0 g'
+            elif not weight.endswith(' g'):
+                new_weight = f'{weight.rstrip("g").strip()} g'
+            else:
+                new_weight = None
 
-            io.write(nwb_data)
-
+            if new_weight:
+                f['/general/subject'].create_dataset('weight', data=new_weight)
+                tqdm.write(f"Weight: '{weight}' -> '{new_weight}' for {os.path.basename(nwb_file)}")
     except Exception as e:
         tqdm.write(f"Skipping {os.path.basename(nwb_file)}: {e}")
