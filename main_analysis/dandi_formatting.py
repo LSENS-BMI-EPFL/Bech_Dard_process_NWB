@@ -65,9 +65,9 @@ for nwb_file in tqdm(nwb_files, desc="Fixing metadata"):
 
             weight = subject_data.weight
             if not weight or weight == 'na':
-                subject_data.fields['weight'] = '0g'
+                subject_data.fields['weight'] = '0 g'
             elif not weight.endswith('g'):
-                subject_data.fields['weight'] = f'{weight}g'
+                subject_data.fields['weight'] = f'{weight} g'
 
             io.write(nwb_data)
 
