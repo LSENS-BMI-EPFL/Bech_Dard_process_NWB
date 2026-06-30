@@ -2,7 +2,11 @@
 
 ## NWB files processing
 This repository allows the processing NWBs files to reproduce analysis from [Bech & Dard, eLife 2026](https://elifesciences.org/reviewed-preprints/109717).  
+
 This README provides instruction to **set up the python environment and run the analysis code to generate intermediate data used to plot**.  
+
+The NWB dataset can be found on DANDI : [dataset DANDI:001847/0.260610.1400](https://doi.org/10.48324/dandi.001847/0.260610.1400)
+
 See at the end how to reproduce the figure panels starting from the intermediate dataset. ([`Bech, Dard figures repo`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures))
 
 # **Installation**
@@ -59,9 +63,9 @@ python path/to/repo/main_analysis/panel_data_format.py
 ```
 
 This will create a 'published_data' folder within the main result folder.  
-This matches publicly available data on [Zenodo](https://zenodo.org/communities/petersen-lab-data)
+This matches publicly available data on [Zenodo](https://doi.org/10.5281/zenodo.17424306)
 
 ## Figure making 
 To reproduce the figure panels from the downloaded or generated intermediate dataset see:  
 - [`Bech, Dard figures repo`](https://github.com/LSENS-BMI-EPFL/Bech_Dard_plot_figures)
-- [`Intermediate dataset`](https://zenodo.org/communities/petersen-lab-data)
+- [`Intermediate dataset`](https://doi.org/10.5281/zenodo.17424306)
